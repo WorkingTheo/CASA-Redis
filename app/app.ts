@@ -4,6 +4,8 @@ import { Store } from 'express-session';
 import { configure, Plan } from "@dwp/govuk-casa";
 import express, { Request, Response } from 'express';
 
+import nameField from './definitions/fields/name';
+
 const app = (
   name: string,
   secret: string,
@@ -18,6 +20,8 @@ const app = (
   const localesDir = path.join(__dirname, './locales/');
 
   const plan = new Plan();
+
+  plan.addSequence('name', 'url:///start/');
 
   const { mount, ancillaryRouter } = configure({
     views: [viewDir],
@@ -36,6 +40,11 @@ const app = (
       {
         waypoint: 'start',
         view: 'pages/start.njk'
+      },
+      {
+        waypoint: 'name',
+        view: 'pages/name.njk',
+        fields: nameField
       }
     ],
     plan
