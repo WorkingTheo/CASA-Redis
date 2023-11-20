@@ -16,4 +16,4 @@ COPY --from=builder /app/package.json /app/
 
 EXPOSE ${PORT}
 
-CMD ["node", "/app/dist/app.js"]
+CMD ["node", "/app/dist/server.js"]
