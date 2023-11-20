@@ -4,6 +4,7 @@ import express from 'express';
 import { noSniff } from 'helmet';
 import { AppConfig } from 'environment';
 import { MemoryStore } from 'express-session';
+import RedisSessionStore from './session/redis-session-store';
 
 import app from "./app";
 
@@ -40,7 +41,7 @@ const port = parseInt(appConfig.SERVER_PORT);
 // !!IMPORTANT: this is ONLY for dev - MemoryStore is not suitable for PROD!
 const sessionStore = new MemoryStore();
 
-const casaApp = app(name, secret, ttl, secure, sessionStore);
+const casaApp = app(name, secret, ttl, secure, RedisSessionStore);
 
 expressApp.use(casaMountUrl, casaApp);
 
