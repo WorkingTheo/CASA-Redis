@@ -1,5 +1,8 @@
 version: '3.9'
 
+networks:
+  test: 
+
 services:
   casa:
     build:
@@ -8,6 +11,8 @@ services:
       - .env
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - test
     depends_on:
       - redis
 
@@ -15,3 +20,5 @@ services:
     image: redis
     ports:
       - "6379:6379"
+    networks:
+      - test
