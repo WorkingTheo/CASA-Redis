@@ -1,5 +1,5 @@
 import RedisClient from 'ioredis';
-import RedisStore from 'connect-redis';
+import MyRedisStore from './MyRedisStore';
 
 const redisClient = new RedisClient({
   port: 6379,
@@ -15,5 +15,5 @@ redisClient.on('connect', function (err) {
   console.log('Connected to redis successfully');
 });
 
-const RedisSessionStore = new RedisStore({ client: redisClient });
+const RedisSessionStore = new MyRedisStore({ client: redisClient });
 export default RedisSessionStore;
