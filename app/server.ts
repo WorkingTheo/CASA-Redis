@@ -4,7 +4,8 @@ import express from 'express';
 import { noSniff } from 'helmet';
 import { AppConfig } from 'environment';
 import { MemoryStore } from 'express-session';
-import RedisSessionStore from './session/redis-session-store';
+// import RedisSessionStore from './session/redis-session-store';
+import RedisSessionStore from './session/redis-cluster-session-store';
 
 import app from "./app";
 
