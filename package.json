@@ -10,6 +10,8 @@
     "@types/express-session": "^1.17.7",
     "@types/nunjucks": "^3.2.3",
     "connect-redis": "^7.1.0",
+    "crypto-js": "^4.2.0",
+    "crypto-service": "^0.1.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
@@ -19,6 +21,7 @@
     "redis": "^4.6.10"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.1",
     "@types/node": "^20.9.3",
     "gulp": "^4.0.2",
     "gulp-typescript": "^6.0.0-alpha.1",
