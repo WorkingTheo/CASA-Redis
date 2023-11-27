@@ -48,7 +48,7 @@ const casaApp = app(name, secret, ttl, secure, RedisSessionStore);
 expressApp.use("/kmsEncryptionKey", (req, res) => {
   getEncryptionKey();
   res.sendStatus(200);
-})
+});
 
 expressApp.use(casaMountUrl, casaApp);
 

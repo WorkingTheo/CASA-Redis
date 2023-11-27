@@ -10,7 +10,7 @@ if (isLocal) {
   });
 }
 
-const kms = new AWS.KMS({
+export const kms = new AWS.KMS({
   region: 'eu-west-2',
   endpoint: 'http://localstack:4566'
 });
