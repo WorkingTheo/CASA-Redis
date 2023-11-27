@@ -1,5 +1,6 @@
 import RedisClient from 'ioredis';
-import RedisStore from 'connect-redis';
+import MyRedisStore from './MyRedisStore';
+import CryptoService from './CryptoService';
 
 const redisClient = new RedisClient({
   port: 6379,
@@ -15,5 +16,7 @@ redisClient.on('connect', function (err) {
   console.log('Connected to redis successfully');
 });
 
-const RedisSessionStore = new RedisStore({ client: redisClient });
+const cryptoService = new CryptoService();
+
+const RedisSessionStore = new MyRedisStore({ client: redisClient }, cryptoService);
 export default RedisSessionStore;
