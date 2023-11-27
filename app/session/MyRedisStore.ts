@@ -71,7 +71,7 @@ class MyRedisStore extends RedisStore {
 
     const sessionWithEncrypted: SessionData = {
       cookie: sess.cookie,
-      encrypted
+      encrypted: encrypted.toString('base64')
     }
 
     try {
