@@ -1,6 +1,7 @@
 import RedisStore from "connect-redis";
 import { SessionData } from "express-session";
 import CryptoService from "./CryptoService";
+import KMSCryptoService from "./KMSCryptoService";
 
 interface Serializer {
   parse(s: string): SessionData | Promise<SessionData>;
@@ -18,15 +19,15 @@ interface RedisStoreOptions {
 }
 
 class MyRedisStore extends RedisStore {
-  cryptoService: CryptoService;
-  constructor(options: RedisStoreOptions, cryptoService: CryptoService) {
+  cryptoService: KMSCryptoService;
+  constructor(options: RedisStoreOptions, cryptoService: KMSCryptoService) {
       super(options);
       this.cryptoService = cryptoService;
   }
 
   async get(sid: string, cb?: (_err?: unknown, _data?: any) => void): Promise<void> {
     try {
-      await super.get(sid, (error?: unknown, data?: SessionData) => {
+      await super.get(sid, async (error?: unknown, data?: SessionData) => {
         if (!data) {
           if (cb) cb(new Error("data is undefined"));
           return;
@@ -37,7 +38,15 @@ class MyRedisStore extends RedisStore {
           return;
         }
 
-        const sessionData: SessionData = this.cryptoService.decrypt(encrypted);
+        const sessionString = await this.cryptoService.decrypt(encrypted);
+        let sessionData: SessionData;
+        try {
+          sessionData = JSON.parse(sessionString);
+        } catch(error) {
+          if (cb) cb(error);
+          return;
+        }
+
         sessionData.cookie = data.cookie;
         if (cb) cb(null, sessionData);
       });
@@ -49,11 +58,20 @@ class MyRedisStore extends RedisStore {
   }
 
   async set(sid: string, sess: SessionData, cb?: (_err?: unknown, _data?: any) => void): Promise<void> {
-    const encrypted = this.cryptoService.encrypt(sess);
+    let sessionString: string; 
+    try {
+      sessionString = JSON.stringify(sess);
+    } catch(error) {
+      console.error("Failed to stringify session", error);
+      if (cb) cb(error);
+      return;
+    }
+
+    const encrypted = await this.cryptoService.encrypt(sessionString);
 
     const sessionWithEncrypted: SessionData = {
       cookie: sess.cookie,
-      encrypted
+      encrypted: encrypted.toString('base64')
     }
 
     try {

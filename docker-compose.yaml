@@ -20,6 +20,20 @@ services:
         ipv4_address: 172.20.0.10
     depends_on:
       - redis-cluster
+      - localstack
+
+  localstack: 
+    image: localstack/localstack-full:1.0
+    environment:
+      - KMS_PROVIDER=local-kms
+      - AWS_REGION=eu-west-2
+      - SERVICES=kms
+    networks:
+      - app_subnet
+    ports: 
+      - "4566:4566"
+    volumes:
+      - ./localstackinit.d:/docker-entrypoint-initaws.d
 
   redis-insight:
     image: redislabs/redisinsight

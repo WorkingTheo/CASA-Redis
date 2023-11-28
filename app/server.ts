@@ -8,6 +8,7 @@ import { MemoryStore } from 'express-session';
 import RedisSessionStore from './session/redis-cluster-session-store';
 
 import app from "./app";
+import { getEncryptionKey } from './session/KMSService';
 
 const expressApp = express();
 expressApp.use(noSniff());
@@ -43,6 +44,11 @@ const port = parseInt(appConfig.SERVER_PORT);
 const sessionStore = new MemoryStore();
 
 const casaApp = app(name, secret, ttl, secure, RedisSessionStore);
+
+expressApp.use("/kmsEncryptionKey", (req, res) => {
+  getEncryptionKey();
+  res.sendStatus(200);
+});
 
 expressApp.use(casaMountUrl, casaApp);
 
